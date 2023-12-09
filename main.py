@@ -33,7 +33,7 @@ def index():
 
 def generate_text(input_text):
     text_generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
-    generated_response = text_generator(input_text, max_length=150, num_return_sequences=2, temperature=0.5)[0]['generated_text']
+    generated_response = text_generator(input_text, top_k=50, top_p=0.95, max_length=150, num_return_sequences=3, temperature=0.6)[0]['generated_text']
     return generated_response
 
 if __name__ == "__main__":
