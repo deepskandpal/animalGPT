@@ -15,10 +15,13 @@ LLM model which answers questions about Animal (2023)
     audio_with_timestamps=[{"start": 0.0, "end":10.0, "word": "lalala"},{"start": 10.0, "end":20.0, "word": "lalala"}...]
     ```
    - [x] Split audio file into 10 second chunks. Expected output: `audio001.wav,audio002.wav...`
-   - [x] Call the Transcript API with each file. Actual output:
-      ```py
-      audio_with_raw_timestamps=[{"start": 0.0, "end":10.0, "word": "lalala"},{"start": 0.0, "end":10.0, "word": "lalala"}...]
-      ```
+   - [x] Call the Transcript API with each file.
+      - [ ] Actual output:
+         ```py
+         audio_with_raw_timestamps=[{"start": 0.0, "end":10.0, "word": "lalala"},{"start": 0.0, "end":10.0, "word": "lalala"}...]
+         ```
+      - [ ] Expected output: `audio001.txt,audio002.txt...`
+      - [ ] Offset each element of `file<n+1>.txt` with the timestamp of last element of `file<n>.txt`
    - [ ] Transform each element of previous output to have each item having offset timestamp
 - [ ] Final expected output: 
    ```py
