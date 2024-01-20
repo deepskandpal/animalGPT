@@ -24,8 +24,7 @@ RUN poetry install
 
 
 # Expose the port that the application listens on.
-EXPOSE 9810
 
 
 # Run the application.
-CMD ["poetry", "run", "python", "main.py"]
+CMD ["poetry", "run", "gunicorn", "-w", "1","--timeout", "260","main:app"]

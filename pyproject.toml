@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.9,<3.12"
 flask = "^3.0.0"
 transformers = {extras = ["torch"], version = "^4.35.2"}
+gunicorn = "^21.2.0"
 
 
 [build-system]

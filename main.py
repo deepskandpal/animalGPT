@@ -40,4 +40,4 @@ def generate_text(input_text):
     return output
 
 if __name__ == "__main__":
-    app.run(debug=True,port=9810)
+    app.run()
