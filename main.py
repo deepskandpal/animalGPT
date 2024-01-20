@@ -1,14 +1,16 @@
 from flask import Flask, render_template, request
-from transformers import GPT2LMHeadModel, GPT2Tokenizer, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
 
 app = Flask(__name__)
 
-# Load the fine-tuned model and tokenizer
-model_path = "./film_reviews_fine_tuned_v2"
-tokenizer = GPT2Tokenizer.from_pretrained(model_path)
-model = GPT2LMHeadModel.from_pretrained(model_path)
-model.eval()
 
+# Load the fine-tuned model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("dkandpalz/animalGPT2")
+model = AutoModelForCausalLM.from_pretrained("dkandpalz/animalGPT2")
+
+# Set the model to evaluation mode
+model.eval()
 # Initialize conversation history
 conversation_history = ""
 
@@ -32,9 +34,10 @@ def index():
     return render_template('index.html', user_input="", response="", conversation_history=conversation_history)
 
 def generate_text(input_text):
-    text_generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
-    generated_response = text_generator(input_text, top_k=50, top_p=0.95, max_length=150, num_return_sequences=3, temperature=0.6)[0]['generated_text']
-    return generated_response
+    inputs = tokenizer(input_text, return_tensors="pt")
+    generated_response = model.generate(**inputs, max_new_tokens=100, do_sample=True, top_p=0.92, top_k=0,num_beams=5,no_repeat_ngram_size=2,num_return_sequences=5,)
+    output = tokenizer.decode(generated_response[0], skip_special_tokens=True)
+    return output
 
 if __name__ == "__main__":
     app.run(debug=True,port=9810)
