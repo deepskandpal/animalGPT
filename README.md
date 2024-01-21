@@ -9,7 +9,7 @@ LLM model which answers questions about [Animal (2023)](https://en.wikipedia.org
 
 ## What is coming next
 1. text processing layer which will handle illegitimate and out of context queries
-2. Embeddings model for model inference along with prompt Engineering for text generation to better understand user queries
+2. Embeddings model for model inference along with prompt Engineering for text generation to better understand user queries (Beta version)
 
 
 
