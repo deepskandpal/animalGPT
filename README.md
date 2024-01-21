@@ -4,7 +4,7 @@ LLM model which answers questions about [Animal (2023)](https://en.wikipedia.org
 ## What is Available 
 1. The platform is now [live](https://animalgpt-production.up.railway.app/) the instance needs to be deployed if the service is unavailable
 2. The model is hosted on hugging face [link](https://huggingface.co/dkandpalz/animalGPT2)
-3. Current Prediction pipeline is just text generation directly from the model for any user query
+3. Current Prediction pipeline is just text generation directly from the model for any user query (alpha version)
 
 
 ## What is coming next
