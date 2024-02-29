@@ -1,43 +1,70 @@
-from flask import Flask, render_template, request
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from dotenv import load_dotenv
+load_dotenv("animal.env")
 
+from flask import Flask, render_template, request, jsonify, session
+
+import pandas as pd
+import time
+import numpy as np
+import uuid
+from animal_gpt.predict.core import Prediction
+
+from  animal_gpt.utils.bq_class import BQ
+from  animal_gpt.utils.config import (
+    default_logs_db
+)
+from animal_gpt.utils.logger import log
 
 app = Flask(__name__)
 
-
-# Load the fine-tuned model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained("dkandpalz/animalGPT2")
-model = AutoModelForCausalLM.from_pretrained("dkandpalz/animalGPT2")
-
-# Set the model to evaluation mode
-model.eval()
-# Initialize conversation history
+model_path = "dkandpalz/animalGPT1"
+predict = Prediction(model_path)
 conversation_history = ""
+collect_info = {}
+app.secret_key = 'your_secret_key_here'
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global conversation_history
 
     if request.method == 'POST':
-        user_input = request.form['user_input']
+        if request.is_json:
+            data = request.get_json()
+            user_input = data.get('user_input')
+        else:
+            user_input = request.form.get('user_input')
 
         if user_input:
             # Combine user input with conversation history
             input_text = user_input
 
             # Generate response
-            response = generate_text(input_text)
+            output, probabilities, predicted_prompt = predict.create_prediction(input_text)
+            session['collect_info'] = {
+                "probabilities": str(probabilities), 
+                "predicted_prompt": predicted_prompt,
+                "output": output,
+                "input": input_text
+            }
+            print(f"collect_info: {session['collect_info']}")
+            return jsonify({'response': output})
+        else:
+            return jsonify({'response': ""})
 
+    return render_template('index.html', user_input=collect_info.get('input_text'), response=collect_info.get('input_text'), conversation_history=conversation_history)
 
-            return render_template('index.html', user_input=user_input, response=response, conversation_history=conversation_history)
+@app.route('/thumbs_feedback', methods=['POST'])
+def thumbs_feedback():
+    # Handle thumbs-up and thumbs-down feedback here
+    thumbs_value = request.json.get('thumbs_value', '0')  # Default to '0' if not provided
+    collect_info = session.get('collect_info', {})
 
-    return render_template('index.html', user_input="", response="", conversation_history=conversation_history)
+    # Log the thumbs-up/thumbs-down feedback (you can add this to the log as needed)
+    print(f"Received thumbs feedback for user input '{collect_info.get('input')}': {thumbs_value}")
+    print(f"Received probabilities, predicted_prompt for user input '{float(collect_info.get('probabilities'))}': '{collect_info.get('predicted_prompt')}'")
+    return jsonify({'status': 'success'})
 
-def generate_text(input_text):
-    inputs = tokenizer(input_text, return_tensors="pt")
-    generated_response = model.generate(**inputs, max_new_tokens=100, do_sample=True, top_p=0.92, top_k=0,num_beams=5,no_repeat_ngram_size=2,num_return_sequences=5,)
-    output = tokenizer.decode(generated_response[0], skip_special_tokens=True)
-    return output
 
 if __name__ == "__main__":
     app.run()
