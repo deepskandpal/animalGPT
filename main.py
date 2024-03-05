@@ -23,11 +23,10 @@ def index():
             # Generate response
             response = prediction.predict(input_text)
 
-
             return render_template('index.html', user_input=user_input, response=response, conversation_history=conversation_history)
 
     return render_template('index.html', user_input="", response="", conversation_history=conversation_history)
 
 
 if __name__ == "__main__":
-    app.run(debug=True,port=9810)
+    app.run()
