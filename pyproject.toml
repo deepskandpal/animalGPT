@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.12"
+python = "^3.9,<3.12"
 flask = "^3.0.0"
 langchain = "^0.1.10"
 langchain-openai = "^0.0.8"
