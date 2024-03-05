@@ -17,7 +17,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY . .
 RUN pip install poetry 
-RUN poetry shell
+RUN poetry env use 3.11
 RUN poetry install
 
 
