@@ -91,100 +91,22 @@
             margin: 0;
             color: #777;
         }
-
-        /* Initially hide the thumbs up and thumbs down buttons */
-        #thumbsUp, #thumbsDown {
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Let's Talk About Animal</h1>
-        <form method="POST" action="/" id="input-form">
+        <form method="POST" action="/">
             <label for="user_input">User Input:</label>
             <input type="text" id="user_input" name="user_input" placeholder="Talk to me...">
             <button type="submit">Generate Response</button>
         </form>
         <div class="response-container">
             <h3>User Input:</h3>
-            <p id="user-input"></p>
+            <p>{{ user_input }}</p>
             <h3>Bot Response:</h3>
-            <p id="bot-response"></p>
-
-            <!-- Initially hide this div -->
-            <div id="thumbs-buttons" class="thumbs-buttons" style="display:none;">
-                <button onclick="thumbsFeedback('up')">Thumbs Up</button>
-                <button onclick="thumbsFeedback('down')">Thumbs Down</button>
-            </div>
+            <p>{{ response }}</p>
         </div>
     </div>
-
-    <script>
-        function showThumbsButtons() {
-            // Show the thumbs buttons
-            document.getElementById('thumbs-buttons').style.display = 'block';
-        }
-    
-        function updateUI(response) {
-            // Update the UI with the bot response
-            document.getElementById('bot-response').innerText = response;
-
-            // Show the thumbs buttons after updating the response
-            showThumbsButtons();
-        }
-
-    
-        function thumbsFeedback(feedback) {
-            const user_input = document.getElementById('user-input').innerText;
-    
-            // Make a new request to send thumbs-up/thumbs-down feedback
-            fetch('/thumbs_feedback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_input: user_input,
-                    thumbs_value: feedback === 'up' ? '1' : '0'
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log(data));  // You can handle the response as needed
-        }
-    
-        document.getElementById('input-form').addEventListener('submit', function (event) {
-        // Prevent the default form submission to handle it via JavaScript
-            event.preventDefault();
-
-            const user_input = document.getElementById('user_input').value;
-
-                // Make a request to generate response
-                fetch('/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_input: user_input
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Update the UI with the generated response
-                    console.log('Received data:', data);
-                    updateUI(data.response);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
-    </script>
-    
 </body>
 </html>

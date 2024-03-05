@@ -6,11 +6,12 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9,<3.10"
-jupyterlab = "^4.0.9"
+python = ">=3.11,<3.12"
 flask = "^3.0.0"
-transformers = {extras = ["torch"], version = "^4.35.2"}
-animal-gpt = {path = "/Users/deepanshu.kandpal/Documents/animalGPT_behind_the_scenes/dist/animal_gpt-1.0.0-py3-none-any.whl"}
+langchain = "^0.1.10"
+langchain-openai = "^0.0.8"
+langchain-experimental = "*"
+faiss-cpu = "^1.8.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
